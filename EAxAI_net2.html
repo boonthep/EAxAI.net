@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Free - เครื่องมืออ่านข้อความด้วยเสียง (Professional Edition)</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons for modern UI -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Gold/Gray/Black/Blue/Purple Gradient Theme */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Updated gradient: Black, Deep Purple, Deep Blue/Gray */
+            background: linear-gradient(135deg, #1A1A1D 0%, #3C096C 50%, #000033 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Glassmorphism Card Style (Kept for visual depth) */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08); /* Semi-transparent white */
+            backdrop-filter: blur(15px); /* Blur effect */
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Light border */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Subtle shadow */
+        }
+
+        /* Gold/Black Button Gradient (Generate) */
+        .gold-button {
+            background: linear-gradient(90deg, #FFD700 0%, #B8860B 100%); /* Gold to Darker Gold */
+            color: #1A1A1D; /* Dark gray/black text */
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .gold-button:hover {
+            /* Rich Gold/Violet Shadow */
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.9), 0 0 40px rgba(75, 0, 130, 0.5);
+            transform: translateY(-2px);
+        }
+        .gold-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Loading Spinner */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #FFD700; /* Gold color for loading spinner */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <!-- Main Application Card -->
+    <div id="app-container" class="glass-card max-w-3xl w-full p-6 sm:p-10 rounded-3xl space-y-8 my-8">
+
+        <!-- Header and Branding -->
+        <header class="text-center space-y-2">
+            <!-- H1 Text Gradient: Gold/Yellow -->
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500 tracking-tighter">
+                Library Free
+            </h1>
+            <!-- Full white text for better visibility -->
+            <p class="text-white text-lg font-light italic">
+                เครื่องมือสร้างเสียงอ่านสำหรับ E-book "The Gold Code"
+            </p>
+        </header>
+
+        <!-- Text Input Area -->
+        <section class="space-y-4">
+            <label for="text-input" class="block text-white text-sm font-medium">ใส่ข้อความที่ต้องการ (สูงสุด 15,000 ตัวอักษร):</label>
+            <textarea id="text-input"
+                      maxlength="15000"
+                      oninput="updateCharCount()"
+                      placeholder="ใส่ข้อความบทที่ 1 จากหนังสือ 'The Gold Code' เพื่อสร้างเสียงอ่าน"
+                      class="w-full h-56 p-4 rounded-xl glass-card text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-amber-500/50 resize-none transition duration-300"></textarea>
+
+            <!-- Character Counter - Adjusted opacity to /80 for better visibility -->
+            <div id="char-count" class="text-right text-sm font-mono text-white/80">
+                0 / 15000
+            </div>
+        </section>
+
+        <!-- Options: Voice Selection -->
+        <section class="space-y-6">
+            <div class="flex flex-col sm:flex-row justify-start items-start space-y-4 sm:space-y-0">
+                
+                <!-- Voice Selection -->
+                <div class="voice-selection space-y-2 w-full">
+                    <h2 class="text-white text-base font-medium">1. เลือกเสียงอ่าน:</h2>
+                    <div class="voice-toggle flex space-x-2 sm:space-x-4 justify-start">
+                        
+                        <!-- Orus (Firm) - Male (Current Voice: ผู้ขาย) -->
+                        <input type="radio" id="voice-male" name="voice" value="Orus" checked>
+                        <label for="voice-male" class="flex items-center space-x-2 text-sm sm:text-base">
+                            <i data-lucide="user-round"></i>
+                            <span>ผู้ชาย (หนักแน่น ชัดเจน)</span>
+                        </label>
+
+                        <!-- Zephyr (Bright) - Female (Current Voice: ผู้หญิง) -->
+                        <input type="radio" id="voice-female" name="voice" value="Zephyr">
+                        <label for="voice-female" class="flex items-center space-x-2 text-sm sm:text-base">
+                            <i data-lucide="user"></i>
+                            <span>ผู้หญิง (ร่าเริง สดใส)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Action Buttons -->
+        <section class="flex pt-4 space-x-4">
+            
+            <!-- NEW: Copy Text Button -->
+            <button id="copy-text-button"
+                    onclick="copyInputText()"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white p-3 sm:w-1/4 rounded-full flex items-center justify-center transition duration-300 disabled:opacity-50"
+                    title="คัดลอกข้อความนำเข้า">
+                <i data-lucide="copy" class="w-5 h-5"></i>
+                <span class="hidden sm:inline ml-2 font-medium">คัดลอกข้อความ</span>
+            </button>
+            
+            <!-- Generate Button -->
+            <button id="generate-button"
+                    onclick="generateVoice()"
+                    class="gold-button w-full sm:w-3/4 py-3 px-6 text-lg font-bold rounded-full flex items-center justify-center space-x-3 transition duration-300">
+                <span id="button-text">
+                    สร้างเสียงอ่าน (Generate Voice)
+                </span>
+                <div id="button-spinner" class="loader hidden"></div>
+            </button>
+        </section>
+
+
+        <!-- Audio Player & Message Box -->
+        <section id="audio-output" class="hidden space-y-4 pt-4">
+            <h2 class="text-white text-xl font-bold border-b border-white/20 pb-2">
+                <!-- Highlight color is amber-400 (Gold) -->
+                <i data-lucide="volume-2" class="inline-block mr-2 text-amber-400"></i>
+                เสียงอ่านสำเร็จแล้ว! (พร้อมสำหรับการฟังบท E-book)
+            </h2>
+            <div class="flex items-center space-x-2">
+                 <audio id="audio-player" controls class="w-full rounded-xl shadow-lg bg-white/20 p-2"></audio>
+                 <!-- NEW: Copy Audio URL Button -->
+                 <button id="copy-audio-url-button"
+                         onclick="copyAudioUrl()"
+                         class="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded-xl transition duration-300 flex-shrink-0"
+                         title="คัดลอกลิงก์ไฟล์เสียง">
+                     <i data-lucide="link" class="w-5 h-5"></i>
+                 </button>
+            </div>
+            <div id="message-box" class="text-white p-3 rounded-lg hidden"></div>
+        </section>
+        
+        <!-- Footer / Credits -->
+        <footer class="text-center pt-8 border-t border-white/10">
+            <p class="text-white/50 text-xs">
+                พัฒนาโดย <a href="https://www.eaxai.net" target="_blank" class="text-amber-400 hover:underline">www.EAxAI.net</a> | Powered by Gemini TTS API
+            </p>
+        </footer>
+
+    </div>
+
+    <script>
+        // --- Configuration ---
+        const apiKey = ""; // API Key will be automatically provided by the Canvas environment
+        const ttsApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+        const MAX_CHARS = 15000; // Increased limit for long-form content
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Lucide icons
+            lucide.createIcons();
+            // Initial character count update
+            updateCharCount();
+        });
+
+        // --- Utility Functions for Audio Conversion (Same as previous, crucial for playback) ---
+
+        /** Converts a Base64 string to an ArrayBuffer. */
+        function base64ToArrayBuffer(base64) {
+            const binaryString = atob(base64);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        /** Converts 16-bit signed PCM audio data to a playable WAV Blob. */
+        function pcmToWav(pcm16, sampleRate = 24000) {
+            const numChannels = 1;
+            const bitDepth = 16;
+            const bytesPerSample = bitDepth / 8;
+            const dataLength = pcm16.length * bytesPerSample;
+
+            const buffer = new ArrayBuffer(44 + dataLength);
+            const view = new DataView(buffer);
+            let offset = 0;
+
+            // RIFF chunk descriptor
+            writeString(view, offset, 'RIFF'); offset += 4;
+            view.setUint32(offset, 36 + dataLength, true); offset += 4;
+            writeString(view, offset, 'WAVE'); offset += 4;
+
+            // fmt sub-chunk
+            writeString(view, offset, 'fmt '); offset += 4;
+            view.setUint32(offset, 16, true); offset += 4;          // Sub-chunk size (16 for PCM)
+            view.setUint16(offset, 1, true); offset += 2;           // Audio format (1 for PCM)
+            view.setUint16(offset, numChannels, true); offset += 2;
+            view.setUint32(offset, sampleRate, true); offset += 4;
+            view.setUint32(offset, sampleRate * numChannels * bytesPerSample, true); offset += 4; // Byte rate
+            view.setUint16(offset, numChannels * bytesPerSample, true); offset += 2; // Block align
+            view.setUint16(offset, bitDepth, true); offset += 2;
+
+            // data sub-chunk
+            writeString(view, offset, 'data'); offset += 4;
+            view.setUint32(offset, dataLength, true); offset += 4;
+
+            // Write PCM data
+            for (let i = 0; i < pcm16.length; i++, offset += 2) {
+                view.setInt16(offset, pcm16[i], true);
+            }
+
+            return new Blob([view], { type: 'audio/wav' });
+        }
+
+        /** Helper to write strings to DataView */
+        function writeString(view, offset, str) {
+            for (let i = 0; i < str.length; i++) {
+                view.setUint8(offset + i, str.charCodeAt(i));
+            }
+        }
+
+        // --- NEW: Copy Functions ---
+
+        /** Copies the text from the input textarea to the clipboard. */
+        function copyInputText() {
+            const textarea = document.getElementById('text-input');
+            if (textarea.value.length === 0) {
+                showMessage("ไม่มีข้อความให้คัดลอก", true);
+                return;
+            }
+            
+            // Temporary focus and selection to use execCommand
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); 
+            
+            try {
+                document.execCommand('copy');
+                showMessage("คัดลอกข้อความนำเข้าเรียบร้อยแล้ว!", false);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                showMessage("ไม่สามารถคัดลอกข้อความได้ (กรุณาลองเลือกข้อความด้วยตนเอง)", true);
+            }
+            
+            // Remove focus
+            textarea.blur();
+        }
+
+        /** Copies the URL of the generated audio to the clipboard. */
+        function copyAudioUrl() {
+            const audioPlayer = document.getElementById('audio-player');
+            const url = audioPlayer.src;
+
+            if (!url || url.length === 0) {
+                showMessage("ไม่พบ URL ไฟล์เสียงที่สร้างสำเร็จ", true);
+                return;
+            }
+
+            // Create a temporary input element to hold the text to be copied
+            const tempInput = document.createElement('input');
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999);
+            
+            try {
+                document.execCommand('copy');
+                showMessage("คัดลอกลิงก์ไฟล์เสียงเรียบร้อยแล้ว!", false);
+            } catch (err) {
+                console.error('Failed to copy URL: ', err);
+                showMessage("ไม่สามารถคัดลอกลิงก์ได้", true);
+            }
+
+            document.body.removeChild(tempInput);
+        }
+
+        // --- UI and State Management Functions ---
+
+        /** Updates the character count and changes color if over limit. */
+        function updateCharCount() {
+            const textarea = document.getElementById('text-input');
+            const counter = document.getElementById('char-count');
+            const count = textarea.value.length;
+
+            counter.textContent = `${count} / ${MAX_CHARS}`;
+            const generateButton = document.getElementById('generate-button');
+            
+            if (count > MAX_CHARS || count === 0) {
+                counter.classList.add('text-red-400', 'font-bold');
+                counter.classList.remove('text-white/80'); 
+                generateButton.disabled = true;
+            } else {
+                counter.classList.remove('text-red-400', 'font-bold');
+                counter.classList.add('text-white/80'); 
+                generateButton.disabled = false;
+            }
+        }
+
+        /** Displays a custom message box. */
+        function showMessage(text, isError = false) {
+            const msgBox = document.getElementById('message-box');
+            msgBox.textContent = text;
+            msgBox.classList.remove('hidden', 'bg-red-900/50', 'bg-indigo-900/50');
+            
+            // Auto-hide previous message if it was a success/info message
+            if (!isError) {
+                // Remove previous error class and set info/success class
+                msgBox.classList.remove('bg-red-900/50');
+                msgBox.classList.add('bg-indigo-900/50');
+                setTimeout(() => {
+                    msgBox.classList.add('hidden');
+                }, 3000); // Hide success/info message after 3 seconds
+            } else {
+                // Error message (Red)
+                msgBox.classList.remove('bg-indigo-900/50');
+                msgBox.classList.add('bg-red-900/50');
+            }
+
+            msgBox.classList.remove('hidden');
+            
+            // Hide player if error (only keep error message visible)
+            if (isError && !text.includes("คัดลอก")) { // Don't hide audio player if the error is just a copy failure
+                 // document.getElementById('audio-output').classList.add('hidden');
+            }
+        }
+
+        /** Sets the loading state on the button. */
+        function setLoading(isLoading) {
+            const button = document.getElementById('generate-button');
+            const spinner = document.getElementById('button-spinner');
+            const textSpan = document.getElementById('button-text');
+
+            if (isLoading) {
+                button.disabled = true;
+                spinner.classList.remove('hidden');
+                textSpan.textContent = 'กำลังสร้างเสียง...';
+            } else {
+                // Re-enable only if text length is valid (checked by updateCharCount)
+                updateCharCount(); 
+                spinner.classList.add('hidden');
+                textSpan.textContent = 'สร้างเสียงอ่าน (Generate Voice)';
+            }
+        }
+
+        // --- TTS API Call and Processing ---
+
+        /**
+         * Main function to call the Gemini TTS API and process the audio.
+         */
+        async function generateVoice() {
+            const text = document.getElementById('text-input').value.trim();
+            // Prevent generation if text is empty or over limit
+            if (text.length === 0 || text.length > MAX_CHARS) return;
+
+            setLoading(true);
+            showMessage('กำลังติดต่อห้องสมุดเพื่อสร้างเสียงอ่านอย่างเป็นทางการ...', false);
+
+            const selectedVoice = document.querySelector('input[name="voice"]:checked').value;
+            const MAX_RETRIES = 3;
+            let attempt = 0;
+            
+            let finalPrompt = text;
+            let styleInstruction = "";
+
+            // --- 3. Dynamic Tone Control based on selection ---
+            if (selectedVoice === 'Orus') { 
+                // Male (Orus): หนักแน่น, ชัดถ้อยชัดคำ (บทบาทผู้ขาย)
+                styleInstruction = "อ่านข้อความด้วยน้ำเสียงที่หนักแน่น, ชัดถ้อยชัดคำ, และเหมาะสมสำหรับบทบาทผู้ขาย: ";
+            } else if (selectedVoice === 'Zephyr') { 
+                // Female (Zephyr): ร่าเริง, สดใส (บทบาทผู้หญิง)
+                styleInstruction = "อ่านข้อความด้วยน้ำเสียงที่ร่าเริง, สดใส, และเหมาะสมสำหรับบทบาทผู้หญิง: ";
+            }
+
+            const styledText = styleInstruction + finalPrompt;
+
+
+            const payload = {
+                contents: [{
+                    parts: [{ text: styledText }]
+                }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: {
+                            // Orus/Zephyr are now set here
+                            prebuiltVoiceConfig: { voiceName: selectedVoice } 
+                        }
+                    }
+                },
+                model: "gemini-2.5-flash-preview-tts"
+            };
+
+            while (attempt < MAX_RETRIES) {
+                try {
+                    const response = await fetch(ttsApiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const part = result?.candidates?.[0]?.content?.parts?.[0];
+                    const audioData = part?.inlineData?.data;
+                    const mimeType = part?.inlineData?.mimeType;
+
+                    if (audioData && mimeType && mimeType.startsWith("audio/L16")) {
+                        // Extract sample rate (expected 24000 Hz for L16)
+                        const sampleRateMatch = mimeType.match(/rate=(\d+)/);
+                        const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 24000;
+                        
+                        // Convert Base64 PCM to WAV Blob
+                        const pcmData = base64ToArrayBuffer(audioData);
+                        const pcm16 = new Int16Array(pcmData);
+                        const wavBlob = pcmToWav(pcm16, sampleRate);
+                        const audioUrl = URL.createObjectURL(wavBlob);
+
+                        // Update UI
+                        const audioPlayer = document.getElementById('audio-player');
+                        audioPlayer.src = audioUrl;
+                        document.getElementById('audio-output').classList.remove('hidden');
+                        document.getElementById('message-box').classList.add('hidden');
+                        audioPlayer.play();
+                        
+                        setLoading(false);
+                        showMessage('สร้างเสียงอ่านสำเร็จ! กดเล่นเพื่อฟัง', false);
+                        return; // Success, exit the loop
+                    } else {
+                        throw new Error("API response is missing audio data or has an invalid format.");
+                    }
+                } catch (error) {
+                    console.error("TTS Generation Error:", error);
+                    attempt++;
+                    if (attempt < MAX_RETRIES) {
+                        // Exponential backoff
+                        const delay = Math.pow(2, attempt) * 1000;
+                        console.log(`Retrying in ${delay / 1000}s...`);
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    } else {
+                        showMessage('เกิดข้อผิดพลาดในการสร้างเสียงอ่าน: ไม่สามารถติดต่อ API ได้ ลองใหม่อีกครั้ง', true);
+                        setLoading(false);
+                        return; // Max retries reached
+                    }
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>
