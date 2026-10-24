@@ -1,6 +1,6 @@
 ---
 // src/pages/index.astro
-// EAxAI.net Static Web Hub - Thai Version (Fixed Responsive & Global Styles)
+// EAxAI.net Static Web Hub - Thai Version (Complete Content Phase 2)
 ---
 <html lang="th">
 <head>
@@ -8,10 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EAxAI.net - The Turtle Way</title>
   <style>
-    /* ตั้งค่าสไตล์ให้ยืดหยุ่นตามหน้าจอโน้ตบุ๊ก */
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; color: #333; box-sizing: border-box; }
-    
-    /* แก้ไขแถบเมนูด้านบนเพื่อป้องกันเมนูภาษาหลุดขอบจอ */
     .nav-container { background-color: #0b1a30; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); box-sizing: border-box; width: 100%; }
     .nav-logo-link { display: flex; align-items: center; text-decoration: none; }
     .nav-logo-img { height: 35px; width: auto; border-radius: 4px; }
@@ -20,22 +17,18 @@
     .nav-menu a:hover { color: #d4af37; }
     .lang-btn { background: #d4af37; color: #0b1a30 !important; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 12px !important; }
     
-    /* ปรับแต่งบีบขนาดแบนเนอร์หลักให้เล็กลงพอดีสายตา ไม่ใหญ่เต็มจอ */
     .banner-container { max-width: 750px; margin: 25px auto 10px auto; padding: 0 20px; text-align: center; box-sizing: border-box; }
     .hero-img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
     
-    /* ปุ่ม EA-MT5 */
     .btn-mt5 { display: inline-block; padding: 10px 20px; background: linear-gradient(135deg, #d4af37, #aa7c11); color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.15); transition: 0.3s; margin-top: 10px; cursor: pointer; border: none; font-size: 13px; }
     .btn-mt5:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
     
-    /* แผงปุ่มเมนูไอคอนสไตล์แอปเป๋าตัง */
     .paotang-menu-grid { background-color: #ffffff; padding: 15px 10px; border-radius: 18px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); max-width: 600px; margin: 20px auto; display: flex; justify-content: space-around; text-align: center; box-sizing: border-box; }
     .paotang-item { text-decoration: none; color: #444; display: flex; flex-direction: column; align-items: center; width: 23%; transition: 0.2s; }
     .paotang-item:hover { transform: scale(1.05); }
     .icon-box { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
     .icon-text { font-size: 11px; font-weight: 600; line-height: 1.3; }
     
-    /* เฉดสีปุ่มไอคอน */
     .bg-blue { background: linear-gradient(135deg, #1e3c72, #2a5298); box-shadow: 0 4px 8px rgba(30,60,114,0.2); }
     .bg-gold { background: linear-gradient(135deg, #d4af37, #aa7c11); box-shadow: 0 4px 8px rgba(212,175,55,0.2); }
     .bg-cyan { background: linear-gradient(135deg, #00c6ff, #0072ff); box-shadow: 0 4px 8px rgba(0,114,255,0.2); }
@@ -43,26 +36,32 @@
     .emoji-size { font-size: 20px; color: #fff; }
 
     main { max-width: 750px; margin: 30px auto; padding: 0 20px; box-sizing: border-box; }
-    .section-title { border-bottom: 2px solid #d4af37; padding-bottom: 6px; color: #0b1a30; font-size: 18px; }
+    .section-title { border-bottom: 2px solid #d4af37; padding-bottom: 6px; color: #0b1a30; font-size: 18px; margin-top: 30px; }
+    .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 15px; }
+    .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border-top: 4px solid #0b1a30; }
+    .card.free { border-top-color: #d4af37; }
+    .badge { background: #e6f4ea; color: #137333; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
+    
+    footer { background-color: #0b1a30; color: #bbb; text-align: center; padding: 25px 20px; font-size: 12px; margin-top: 60px; line-height: 1.6; }
+    footer a { color: #d4af37; text-decoration: none; }
   </style>
 </head>
 <body>
 
-  <!-- 1. แถบเมนูด้านบน (ดึงปุ่มภาษาให้ขยับเข้ามาอยู่ในจอแน่นอน) -->
+  <!-- 1. แถบเมนูด้านบน -->
   <nav class="nav-container">
     <a href="/" class="nav-logo-link">
       <img src="/images/logo.png" alt="EAxAI Official Logo" class="nav-logo-img" />
     </a>
     <ul class="nav-menu">
-      <li><a href="#tools">บริการฟรี</a></li>
-      <li><a href="#products">ผลิตภัณฑ์ภายนอก</a></li>
-      <!-- ปุ่มสลับภาษา TH และ EN แสดงผลตรงนี้ -->
+      <li><a href="#free-services">บริการฟรี</a></li>
+      <li><a href="#digital-products">ผลิตภัณฑ์ภายนอก</a></li>
       <li><span style="color: #d4af37; font-size: 12px; font-weight: bold; margin-right: 5px;">TH</span></li>
       <li><a href="/en" class="lang-btn">EN</a></li>
     </ul>
   </nav>
 
-  <!-- 2. โซน Hero Banner (บีบขนาดให้หดเล็กลงพอดีสายตาเรียบร้อย) -->
+  <!-- 2. โซน Hero Banner -->
   <div class="banner-container">
     <img src="/images/hero-banner.png" alt="EAxAI Gold Regime Hybrid Banner" class="hero-img" />
     <div>
@@ -74,31 +73,86 @@
 
   <!-- 3. แผงเมนูปุ่มทางลัดสไตล์แอปเป๋าตัง -->
   <div class="paotang-menu-grid">
-    <a href="#tools" class="paotang-item">
+    <a href="#risk-calc" class="paotang-item">
       <div class="icon-box bg-blue"><span class="emoji-size">📊</span></div>
       <span class="icon-text">คำนวณความเสี่ยง</span>
     </a>
-    <a href="#tools" class="paotang-item">
+    <a href="#trade-journal" class="paotang-item">
       <div class="icon-box bg-gold"><span class="emoji-size">📔</span></div>
       <span class="icon-text">บันทึกเทรด</span>
     </a>
-    <a href="#tools" class="paotang-item">
+    <a href="#bundle-tools" class="paotang-item">
       <div class="icon-box bg-cyan"><span class="emoji-size">🛠️</span></div>
       <span class="icon-text">3 เครื่องมือฟรี</span>
     </a>
-    <a href="#products" class="paotang-item">
+    <a href="#digital-products" class="paotang-item">
       <div class="icon-box bg-green"><span class="emoji-size">📦</span></div>
       <span class="icon-text">สินค้าดิจิทัล</span>
     </a>
   </div>
 
-  <!-- 4. ส่วนเนื้อหา -->
-  <main id="tools">
-    <h2 class="section-title">📌 สถานะระบบจัดทำเว็บไซต์</h2>
-    <p style="color: #666; font-size: 14px; line-height: 1.6;">
-      ยินดีต้อนรับสู่ระบบ EAxAI.net ศูนย์รวมเครื่องมือเทรดฟรีเพื่อวินัยที่ยั่งยืนตามแนวทาง The Turtle Way ขณะนี้โครงสร้างสไตล์แอปเป๋าตังและระบบจัดวางภาพพื้นฐานเสร็จสมบูรณ์แล้ว พร้อมเข้าสู่กระบวนการใส่ข้อมูลภาษาไทยเต็มรูปแบบในขั้นต่อไป
-    </p>
+  <!-- 4. ส่วนเนื้อหาหลักตามวัตถุประสงค์โครงการ -->
+  <main>
+    <!-- กลุ่มบริการฟรี -->
+    <section id="free-services">
+      <h2 class="section-title">🛠️ บริการหลักสำหรับเทรดเดอร์ (ใช้งานฟรี 100%)</h2>
+      <div class="grid-container">
+        
+        <div class="card free" id="risk-calc">
+          <span class="badge">เปิดใช้งานฟรี</span>
+          <h3>Risk Management Calculator</h3>
+          <p style="font-size: 13px; color: #666; line-height: 1.5;">เครื่องมือคำนวณความเสี่ยงและขนาดสัญญา (Position Sizing) อัจฉริยะ ช่วยควบคุมความเสี่ยงของพอร์ตให้อยู่ในเกณฑ์ที่ปลอดภัยก่อนส่งคำสั่งเทรดจริงตามหลักวินัย The Turtle Way</p>
+        </div>
+
+        <div class="card free" id="trade-journal">
+          <span class="badge">เปิดใช้งานฟรี</span>
+          <h3>Trading Journal (บันทึกการเทรด)</h3>
+          <p style="font-size: 13px; color: #666; line-height: 1.5;">ระบบไดอารี่บันทึกสถิติและพฤติกรรมการเทรดส่วนบุคคล ช่วยวิเคราะห์จุดเด่นจุดบกพร่อง พัฒนาจิตวิทยาการลงทุน และสร้างความสม่ำเสมอของผลกำไรในระยะยาว</p>
+        </div>
+
+        <div class="card free" id="bundle-tools">
+          <span class="badge">3-in-1 Bundle</span>
+          <h3>คลัง 3 เครื่องมืออเนกประสงค์</h3>
+          <p style="font-size: 13px; color: #666; line-height: 1.5;">มัดรวมเครื่องมือสำคัญไว้ในที่เดียว ได้แก่ Compound Interest Calculator (คำนวณดอกเบี้ยทบต้น), Trading Checklist (ระบบเช็กเงื่อนไขก่อนเข้าเทรด) และ Market Session Converter (ระบบแปลงเวลาเปิด-ปิดตลาดโลก)</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- กลุ่มสินค้าดิจิทัลภายนอก -->
+    <section id="digital-products">
+      <h2 class="section-title">📦 ผลิตภัณฑ์ดิจิทัลของเรา (ช่องทางจัดจำหน่ายภายนอก)</h2>
+      <div class="grid-container">
+        
+        <div class="card">
+          <h3>E-Book & Audio Book</h3>
+          <p style="font-size: 13px; color: #666; line-height: 1.5;">หนังสืออิเล็กทรอนิกส์และหนังสือเสียง ถ่ายทอดความรู้ระบบการเทรดอัตโนมัติ กลยุทธ์ Hybrid และแนวคิดการบริหารพอร์ตโฟลิโออย่างยั่งยืนเพื่อส่งต่ออัจฉริยภาพสู่เทรดเดอร์รุ่นใหม่</p>
+        </div>
+
+        <div class="card">
+          <h3>Media & Entertainment</h3>
+          <p style="font-size: 13px; color: #666; line-height: 1.5;">รวบรวมรายการเทรดดิ้งคาสต์ (Podcast) สร้างแรงบันดาลใจ บทเพลงสอนการเทรดเพื่อช่วยจดจำคำศัพท์และเทคนิค รวมถึงละครสั้นจำลองเหตุการณ์จริงเพื่อเสริมจิตวิทยาการเอาชนะอารมณ์ตลาด</p>
+        </div>
+
+        <div class="card">
+          <h3>EA-MT5 Regime Distributed</h3>
+          <p style="font-size: 13px; color: #666; line-height: 1.5;">ระบบกลยุทธ์บอตเทรดอัตโนมัติ Parent-Child 4TF ที่ผ่านกระบวนการคัดกรองสัญญาณทางเทคนิคและคณิตศาสตร์การเงินอย่างเข้มงวด (เตรียมอำนวยความสะดวกในการเข้าถึงลิงก์แพลตฟอร์มภายนอกเร็วๆ นี้)</p>
+        </div>
+
+      </div>
+    </section>
   </main>
+
+  <!-- 5. ส่วนท้ายเว็บ แสดงความโปร่งใสและข้อมูลเครื่องหมายการค้าล่วงหน้า -->
+  <footer>
+    <p style="font-weight: 600; margin-bottom: 5px; color: #fff;">EAxAI.net © 2026 - Static Web Hub Powered by Astro</p>
+    <p style="max-width: 700px; margin: 0 auto 15px auto; font-size: 11px; color: #aaa;">
+      **ข้อชี้แจงความโปร่งใส:** เว็บไซต์นี้เปิดให้เข้าใช้งานเครื่องมือคำนวณฟรีโดยไม่มีการสมัครสมาชิก และไม่มีการจัดเก็บระบบชำระเงินใดๆ ภายในเว็บไซต์ทั้งสิ้น รวมถึงไม่มีการเปิดคอร์สสอน จัดการฝึกอบรม หรือตั้งสถาบันกวดวิชาใดๆ บนแพลตฟอร์มนี้ ผลิตภัณฑ์ดิจิทัลทั้งหมดถูกฝากจัดจำหน่ายบนแพลตฟอร์มภายนอกที่เป็นมาตรฐานสากลเท่านั้น
+    </p>
+    <p style="font-size: 11px; color: #d4af37;">
+      ⚖️ เครื่องหมายการค้าสัญลักษณ์ตราสินค้า "EAxAI" อยู่ในกระบวนการขั้นตอนยื่นคำขอรับรองและระหว่างการอนุมัติอย่างเป็นทางการตามกฎหมายทรัพย์สินทางปัญญา
+    </p>
+  </footer>
 
 </body>
 </html>
